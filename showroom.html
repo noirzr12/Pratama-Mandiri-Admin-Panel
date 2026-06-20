@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Showroom - Pratama Mandiri</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <span class="logo-pm">PM</span>
+      <div><div class="logo-name">Pratama Mandiri</div><div class="logo-sub">Car Showroom</div></div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="index.html#layanan">Layanan</a></li>
+      <li><a href="index.html#kontak">Kontak</a></li>
+      <li><a href="showroom.html" class="btn-showroom active">Showroom</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+  </div>
+  <div class="nav-mobile" id="mobileMenu">
+    <a href="index.html" onclick="toggleMenu()">Beranda</a>
+    <a href="index.html#layanan" onclick="toggleMenu()">Layanan</a>
+    <a href="index.html#kontak" onclick="toggleMenu()">Kontak</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label animate-fadein" style="animation-delay:0.2s">Koleksi Kendaraan</div>
+    <h1 class="page-title animate-fadein" style="animation-delay:0.35s">Showroom <span class="text-accent">Pratama Mandiri</span></h1>
+    <p class="page-desc animate-fadein" style="animation-delay:0.5s">Temukan kendaraan impian Anda dari koleksi pilihan kami</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-group">
+      <select id="filterBrand" onchange="filterCars()"><option value="">Semua Merek</option></select>
+      <select id="filterStatus" onchange="filterCars()">
+        <option value="">Semua Status</option>
+        <option value="available">Tersedia</option>
+        <option value="sold">Terjual</option>
+      </select>
+      <input type="text" id="searchCar" placeholder="Cari nama mobil..." oninput="filterCars()">
+    </div>
+    <div id="carCount" class="car-count"></div>
+  </div>
+</div>
+
+<section class="showroom-section">
+  <div class="container">
+    <div class="cars-grid" id="carsGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div style="font-size:3rem;">🚗</div>
+      <h3>Belum ada mobil</h3>
+      <p>Koleksi sedang diperbarui. Silakan kunjungi kembali nanti.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="justify-content:center;border:none;">
+      <span>© 2024 Pratama Mandiri. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+renderShowroom();
+</script>
+</body>
+</html>

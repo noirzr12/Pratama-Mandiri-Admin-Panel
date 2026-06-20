@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Pratama Mandiri</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#060f23;color:#fff;min-height:100vh;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+:root{
+  --yellow:#F5C518;--yellow-dark:#d4a800;
+  --blue:#1B4F9E;--blue-dark:#060f23;--blue-mid:#0d1f45;
+  --green:#27ae60;--red:#e74c3c;
+  --radius:12px;--radius-lg:18px;
+  --shadow-yellow:0 8px 32px rgba(245,197,24,0.25);
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-30px);}to{opacity:1;transform:translateX(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(245,197,24,0.3);}50%{box-shadow:0 0 40px rgba(245,197,24,0.6);}}
+@keyframes particleFloat{0%{transform:translateY(0);opacity:0.6;}100%{transform:translateY(-100vh);opacity:0;}}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}
+@keyframes tabIn{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:translateX(0);}}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:#060f23;overflow:hidden;}
+.login-bg{position:absolute;inset:0;overflow:hidden;}
+.login-bg-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(27,79,158,0.4) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(245,197,24,0.1) 0%,transparent 50%);}
+.particle{position:absolute;width:3px;height:3px;background:var(--yellow);border-radius:50%;animation:particleFloat linear infinite;opacity:0;}
+.login-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4rem;max-width:520px;position:relative;z-index:1;animation:slideRight 0.8s cubic-bezier(0.22,1,0.36,1) forwards;}
+.login-brand{display:flex;align-items:center;gap:14px;margin-bottom:3rem;}
+.login-logo-box{width:52px;height:52px;background:var(--yellow);color:#060f23;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0;box-shadow:var(--shadow-yellow);animation:glowPulse 3s ease-in-out infinite;}
+.login-brand-name{font-size:1.3rem;font-weight:900;}
+.login-brand-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;letter-spacing:0.05em;}
+.login-headline{font-size:clamp(2rem,3.5vw,3rem);font-weight:900;line-height:1.15;margin-bottom:1rem;letter-spacing:-1px;}
+.login-headline span{color:var(--yellow);}
+.login-subtitle{color:rgba(255,255,255,0.5);font-size:15px;line-height:1.7;max-width:380px;}
+.login-features{margin-top:2.5rem;display:flex;flex-direction:column;gap:0.85rem;}
+.login-feature{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.6);font-size:14px;}
+.login-feature-dot{width:28px;height:28px;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.login-right{flex:0 0 440px;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;z-index:1;animation:fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s both;}
+.login-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:2.5rem;width:100%;backdrop-filter:blur(20px);box-shadow:0 32px 80px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);}
+.login-card-title{font-size:1.35rem;font-weight:800;margin-bottom:0.35rem;}
+.login-card-sub{color:rgba(255,255,255,0.45);font-size:14px;margin-bottom:2rem;}
+.form-field{margin-bottom:1.25rem;}
+.form-field label{display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+.input-wrap{position:relative;}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
+.login-input{width:100%;padding:0.85rem 1rem 0.85rem 2.75rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:12px;font-size:15px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:all 0.25s ease;}
+.login-input::placeholder{color:rgba(255,255,255,0.25);}
+.login-input:focus{border-color:var(--yellow);background:rgba(245,197,24,0.06);box-shadow:0 0 0 4px rgba(245,197,24,0.12);}
+.login-input.error{border-color:var(--red);animation:shake 0.4s ease;}
+.btn-login{width:100%;padding:0.95rem;background:var(--yellow);color:#060f23;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;transition:all 0.25s ease;position:relative;overflow:hidden;box-shadow:var(--shadow-yellow);margin-top:0.5rem;}
+.btn-login:hover{background:#ffe033;transform:translateY(-2px);}
+.btn-login.loading{pointer-events:none;opacity:0.8;}
+.btn-login .spinner{display:none;width:18px;height:18px;border:2px solid rgba(0,0,0,0.2);border-top-color:#060f23;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;}
+.btn-login.loading .btn-text{display:none;}
+.btn-login.loading .spinner{display:block;}
+.login-error-msg{color:#ff6b6b;font-size:13px;font-weight:600;margin-top:0.75rem;text-align:center;min-height:20px;opacity:0;transition:opacity 0.2s;}
+.login-error-msg.show{opacity:1;}
+.login-divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08);}
+.login-divider span{color:rgba(255,255,255,0.25);font-size:12px;}
+.back-link{display:flex;align-items:center;justify-content:center;gap:6px;color:rgba(255,255,255,0.4);font-size:13px;font-weight:500;transition:color 0.2s;margin-top:1.25rem;}
+.back-link:hover{color:rgba(255,255,255,0.8);}
+
+/* ADMIN PANEL */
+#adminPanel{display:none;min-height:100vh;background:#080f1e;}
+.topbar{position:fixed;top:0;left:260px;right:0;height:64px;z-index:50;background:rgba(8,15,30,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+.topbar-title{font-size:15px;font-weight:700;color:rgba(255,255,255,0.9);}
+.topbar-right{display:flex;align-items:center;gap:0.75rem;}
+.topbar-user{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:0.4rem 1rem 0.4rem 0.5rem;border-radius:40px;}
+.topbar-avatar{width:30px;height:30px;background:var(--yellow);color:#060f23;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;}
+.topbar-username{font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);}
+.btn-topbar{padding:0.4rem 0.85rem;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.btn-logout{background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.25);color:#ff6b6b;}
+.btn-logout:hover{background:rgba(231,76,60,0.25);}
+.btn-view-site{background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.25);color:var(--yellow);}
+.btn-view-site:hover{background:rgba(245,197,24,0.2);}
+.btn-view-showroom{background:rgba(27,79,158,0.15);border:1px solid rgba(27,79,158,0.3);color:#7eb3ff;}
+.btn-view-showroom:hover{background:rgba(27,79,158,0.25);}
+
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;z-index:60;background:linear-gradient(160deg,#060f23 0%,#0d1f45 100%);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;}
+.sidebar-logo{display:flex;align-items:center;gap:12px;padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+.sidebar-logo-box{width:40px;height:40px;background:var(--yellow);color:#060f23;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;box-shadow:0 4px 14px rgba(245,197,24,0.3);}
+.sidebar-logo-name{font-weight:800;font-size:14px;line-height:1.2;}
+.sidebar-logo-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:1px;}
+.sidebar-section-label{font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.12em;padding:1.25rem 1.5rem 0.4rem;}
+.sidebar-nav{flex:1;padding:0.5rem 0.75rem;overflow-y:auto;}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:0.7rem 0.85rem;font-size:14px;font-weight:600;color:rgba(255,255,255,0.5);border-radius:10px;transition:all 0.2s;margin-bottom:2px;cursor:pointer;}
+.sidebar-link:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);}
+.sidebar-link.active{background:rgba(245,197,24,0.12);color:var(--yellow);box-shadow:inset 3px 0 0 var(--yellow);}
+.sidebar-link-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+.sidebar-footer{padding:1rem 0.75rem;border-top:1px solid rgba(255,255,255,0.06);}
+
+.admin-main{margin-left:260px;padding-top:64px;min-height:100vh;background:#080f1e;}
+.admin-content{padding:2rem;}
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:tabIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards;}
+.page-header-bar{margin-bottom:2rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.page-header-bar h1{font-size:1.6rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:0.25rem;}
+.page-header-bar p{color:rgba(255,255,255,0.4);font-size:14px;}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;}
+.stat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);padding:1.5rem;transition:all 0.25s ease;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--yellow),var(--blue));}
+.stat-card.green::before{background:linear-gradient(90deg,#27ae60,#2ecc71);}
+.stat-card.red::before{background:linear-gradient(90deg,#e74c3c,#ff6b6b);}
+.stat-card:hover{background:rgba(255,255,255,0.06);transform:translateY(-3px);}
+.stat-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.6rem;}
+.stat-num{font-size:2.75rem;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;}
+.stat-sub{font-size:12px;color:rgba(255,255,255,0.3);margin-top:0.4rem;}
+
+/* Panel card */
+.panel-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.5rem;}
+.panel-card-header{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;}
+.panel-card-title{font-size:14px;font-weight:800;color:rgba(255,255,255,0.8);}
+.recent-car-item{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s;}
+.recent-car-item:last-child{border-bottom:none;}
+.recent-car-item:hover{background:rgba(255,255,255,0.03);}
+.recent-car-img{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;font-size:1.4rem;}
+.recent-car-img img{width:100%;height:100%;object-fit:cover;}
+.recent-car-info{flex:1;}
+.recent-car-name{font-weight:700;font-size:14px;color:rgba(255,255,255,0.85);}
+.recent-car-price{font-size:13px;color:var(--yellow);font-weight:700;margin-top:2px;}
+
+/* Car list */
+.admin-cars-list{display:flex;flex-direction:column;gap:0.75rem;}
+.admin-car-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;transition:all 0.2s;}
+.admin-car-item:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);}
+.admin-car-img{width:64px;height:64px;border-radius:10px;background:rgba(255,255,255,0.06);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.admin-car-img img{width:100%;height:100%;object-fit:cover;}
+.admin-car-info{flex:1;min-width:120px;}
+.admin-car-name{font-weight:800;font-size:15px;color:rgba(255,255,255,0.9);}
+.admin-car-meta{font-size:12px;color:rgba(255,255,255,0.35);margin:2px 0;}
+.admin-car-price{font-size:15px;font-weight:800;color:var(--yellow);}
+.admin-car-actions{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+
+/* Buttons */
+.btn-toggle{padding:0.4rem 0.85rem;font-size:12px;font-weight:700;border:1px solid rgba(245,197,24,0.3);color:var(--yellow);background:rgba(245,197,24,0.08);border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.btn-toggle:hover{background:rgba(245,197,24,0.18);}
+.btn-edit{padding:0.4rem 0.85rem;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.05);border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.btn-edit:hover{background:rgba(255,255,255,0.1);}
+.btn-delete{padding:0.4rem 0.85rem;font-size:12px;font-weight:700;border:1px solid rgba(231,76,60,0.25);color:#ff6b6b;background:rgba(231,76,60,0.06);border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.btn-delete:hover{background:rgba(231,76,60,0.15);}
+.btn-add-car{display:inline-flex;align-items:center;gap:8px;padding:0.6rem 1.25rem;background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.25);color:var(--yellow);font-size:13px;font-weight:700;border-radius:10px;cursor:pointer;transition:all 0.2s;}
+.btn-add-car:hover{background:rgba(245,197,24,0.18);}
+
+.status-badge{display:inline-block;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.03em;}
+.badge-available{background:rgba(39,174,96,0.15);color:#4cd97b;border:1px solid rgba(39,174,96,0.25);}
+.badge-sold{background:rgba(231,76,60,0.12);color:#ff6b6b;border:1px solid rgba(231,76,60,0.2);}
+
+/* Form */
+.form-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);padding:2rem;max-width:720px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.35rem;}
+.form-group{display:flex;flex-direction:column;gap:0.45rem;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.07em;}
+.admin-input{width:100%;padding:0.7rem 1rem;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:all 0.2s;resize:vertical;}
+.admin-input::placeholder{color:rgba(255,255,255,0.2);}
+.admin-input:focus{border-color:var(--yellow);background:rgba(245,197,24,0.05);box-shadow:0 0 0 3px rgba(245,197,24,0.1);}
+.admin-input option{background:#0d1f45;color:#fff;}
+.form-actions{display:flex;gap:0.75rem;margin-top:1.75rem;flex-wrap:wrap;}
+.btn-save{padding:0.8rem 2rem;background:var(--yellow);color:#060f23;font-weight:900;font-size:14px;border:none;border-radius:10px;cursor:pointer;transition:all 0.25s;box-shadow:var(--shadow-yellow);}
+.btn-save:hover{background:#ffe033;transform:translateY(-2px);}
+.btn-cancel{padding:0.8rem 1.5rem;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;transition:all 0.2s;}
+.btn-cancel:hover{background:rgba(255,255,255,0.08);}
+.form-msg{margin-top:0.85rem;font-size:14px;font-weight:600;min-height:20px;}
+.photo-preview{margin-top:10px;}
+.photo-preview img{border-radius:10px;max-height:200px;object-fit:cover;}
+
+/* Portfolio editor */
+.portfolio-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.portfolio-section-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);overflow:hidden;}
+.portfolio-section-card.full{grid-column:1/-1;}
+.portfolio-section-header{padding:1rem 1.5rem;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;}
+.portfolio-section-title{font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;}
+.portfolio-section-body{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.portfolio-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;transition:all 0.2s;}
+.portfolio-toggle.on{background:rgba(39,174,96,0.15);color:#4cd97b;border:1px solid rgba(39,174,96,0.25);}
+.portfolio-toggle.off{background:rgba(231,76,60,0.1);color:#ff6b6b;border:1px solid rgba(231,76,60,0.2);}
+
+/* Color picker */
+.color-row{display:flex;align-items:center;gap:1rem;}
+.color-preview{width:40px;height:40px;border-radius:10px;border:2px solid rgba(255,255,255,0.15);flex-shrink:0;cursor:pointer;transition:transform 0.2s;}
+.color-preview:hover{transform:scale(1.1);}
+.color-label{font-size:13px;color:rgba(255,255,255,0.6);flex:1;}
+.color-input-hidden{position:absolute;opacity:0;width:0;height:0;}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;right:2rem;background:#1a2a1a;border:1px solid rgba(39,174,96,0.4);color:#4cd97b;padding:0.85rem 1.5rem;border-radius:12px;font-size:14px;font-weight:700;z-index:9999;animation:fadeInUp 0.3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+.toast.error{background:#2a1a1a;border-color:rgba(231,76,60,0.4);color:#ff6b6b;}
+
+/* Empty */
+.empty-state{text-align:center;padding:4rem 1rem;color:rgba(255,255,255,0.3);}
+.empty-state h3{font-size:1.2rem;margin:0.75rem 0 0.5rem;color:rgba(255,255,255,0.6);font-weight:800;}
+
+/* Ripple */
+.ripple-btn{position:relative;overflow:hidden;}
+.ripple{position:absolute;width:10px;height:10px;background:rgba(0,0,0,0.2);border-radius:50%;transform:scale(0);animation:rippleAnim 0.6s linear;pointer-events:none;margin-left:-5px;margin-top:-5px;}
+
+/* Loading overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(6,15,35,0.85);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+.loading-spinner{width:48px;height:48px;border:3px solid rgba(245,197,24,0.2);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.8s linear infinite;}
+.loading-text{color:rgba(255,255,255,0.6);font-size:14px;}
+
+@media(max-width:768px){
+  .topbar{left:0;}
+  .sidebar{width:100%;height:auto;position:static;}
+  .admin-main{margin-left:0;padding-top:0;}
+  .stats-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .portfolio-grid{grid-template-columns:1fr;}
+  .login-left{display:none;}
+  .login-right{flex:1;padding:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Memuat panel admin...</div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen" style="display:none;">
+  <div class="login-bg">
+    <div class="login-bg-gradient"></div>
+    <div id="particles"></div>
+  </div>
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="login-logo-box">PM</div>
+      <div><div class="login-brand-name">Pratama Mandiri</div><div class="login-brand-sub">ADMIN PORTAL</div></div>
+    </div>
+    <h1 class="login-headline">Kelola Showroom<br><span>Lebih Mudah.</span></h1>
+    <p class="login-subtitle">Panel admin khusus untuk mengelola kendaraan, konten website, dan tampilan showroom secara real-time.</p>
+    <div class="login-features">
+      <div class="login-feature"><div class="login-feature-dot">🚗</div>Tambah & kelola koleksi mobil</div>
+      <div class="login-feature"><div class="login-feature-dot">✏️</div>Edit konten & warna website</div>
+      <div class="login-feature"><div class="login-feature-dot">📊</div>Dashboard statistik real-time</div>
+      <div class="login-feature"><div class="login-feature-dot">🔒</div>Data tersimpan di cloud Supabase</div>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-card-title">Selamat Datang 👋</div>
+      <div class="login-card-sub">Masuk ke panel admin Pratama Mandiri</div>
+      <div class="form-field">
+        <label>Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="loginUsername" class="login-input" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔑</span>
+          <input type="password" id="loginPassword" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+      </div>
+      <button class="btn-login ripple-btn" onclick="doLogin()" id="loginBtn">
+        <span class="btn-text">Masuk ke Dashboard</span>
+        <div class="spinner"></div>
+      </button>
+      <div class="login-error-msg" id="loginError">Username atau password salah.</div>
+      <div class="login-divider"><span>atau</span></div>
+      <a href="index.html" class="back-link">← Kembali ke Website Utama</a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-box">PM</div>
+      <div><div class="sidebar-logo-name">Pratama Mandiri</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section-label">Menu Utama</div>
+      <div class="sidebar-link active" onclick="showTab('dashboard',this)"><span class="sidebar-link-icon">📊</span> Dashboard</div>
+      <div class="sidebar-link" onclick="showTab('cars',this)"><span class="sidebar-link-icon">🚗</span> Kelola Mobil</div>
+      <div class="sidebar-link" onclick="showTab('add',this)"><span class="sidebar-link-icon">➕</span> Tambah Mobil</div>
+      <div class="sidebar-section-label" style="margin-top:1rem;">Website</div>
+      <div class="sidebar-link" onclick="showTab('portfolio',this)"><span class="sidebar-link-icon">✏️</span> Edit Portofolio</div>
+      <div class="sidebar-link" onclick="showTab('appearance',this)"><span class="sidebar-link-icon">🎨</span> Tampilan & Warna</div>
+      <div class="sidebar-section-label" style="margin-top:1rem;">Navigasi</div>
+      <div class="sidebar-link" onclick="window.open('showroom.html','_blank')"><span class="sidebar-link-icon">🏪</span> Lihat Showroom</div>
+      <div class="sidebar-link" onclick="window.open('index.html','_blank')"><span class="sidebar-link-icon">🌐</span> Website Utama</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-link" onclick="doLogout()" style="color:rgba(255,100,100,0.7);"><span class="sidebar-link-icon">🚪</span> Keluar</div>
+    </div>
+  </aside>
+
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-right">
+      <button class="btn-topbar btn-view-showroom" onclick="window.open('showroom.html','_blank')">🏪 Showroom</button>
+      <button class="btn-topbar btn-view-site" onclick="window.open('index.html','_blank')">🌐 Website</button>
+      <div class="topbar-user"><div class="topbar-avatar">A</div><span class="topbar-username">Admin</span></div>
+      <button class="btn-topbar btn-logout" onclick="doLogout()">Keluar</button>
+    </div>
+  </div>
+
+  <main class="admin-main">
+    <div class="admin-content">
+
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard" class="tab-content active">
+        <div class="page-header-bar">
+          <div><h1>Dashboard</h1><p>Selamat datang! Ini ringkasan showroom Anda.</p></div>
+          <div class="btn-add-car" onclick="showTab('add',null)">+ Tambah Mobil</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total Mobil</div><div class="stat-num" id="statTotal">-</div><div class="stat-sub">Unit di showroom</div></div>
+          <div class="stat-card green"><div class="stat-label">Tersedia</div><div class="stat-num" id="statAvail">-</div><div class="stat-sub">Siap dibeli</div></div>
+          <div class="stat-card red"><div class="stat-label">Terjual</div><div class="stat-num" id="statSold">-</div><div class="stat-sub">Unit terjual</div></div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-card-header"><div class="panel-card-title">Mobil Terbaru</div></div>
+          <div id="recentCars"><div style="padding:2rem;text-align:center;color:rgba(255,255,255,0.3);">Memuat...</div></div>
+        </div>
+      </div>
+
+      <!-- KELOLA MOBIL -->
+      <div id="tab-cars" class="tab-content">
+        <div class="page-header-bar">
+          <div><h1>Kelola Mobil</h1><p>Tambah, edit, atau hapus unit kendaraan.</p></div>
+          <div class="btn-add-car" onclick="showTab('add',null)">+ Tambah Baru</div>
+        </div>
+        <div id="adminCarsList"><div style="padding:2rem;text-align:center;color:rgba(255,255,255,0.3);">Memuat...</div></div>
+      </div>
+
+      <!-- TAMBAH/EDIT MOBIL -->
+      <div id="tab-add" class="tab-content">
+        <div class="page-header-bar"><div><h1 id="formTitle">Tambah Mobil Baru</h1><p>Isi data kendaraan dengan lengkap.</p></div></div>
+        <div class="form-card">
+          <input type="hidden" id="editId">
+          <div class="form-grid">
+            <div class="form-group"><label>Nama Mobil *</label><input type="text" id="fName" class="admin-input" placeholder="Toyota Avanza 2022"></div>
+            <div class="form-group"><label>Merek *</label><input type="text" id="fBrand" class="admin-input" placeholder="Toyota"></div>
+            <div class="form-group"><label>Tahun *</label><input type="number" id="fYear" class="admin-input" placeholder="2022" min="1990" max="2030"></div>
+            <div class="form-group"><label>Harga (Rp) *</label><input type="number" id="fPrice" class="admin-input" placeholder="185000000"></div>
+            <div class="form-group full"><label>Deskripsi</label><textarea id="fDesc" class="admin-input" rows="3" placeholder="Kondisi bagus, km rendah, surat lengkap..."></textarea></div>
+            <div class="form-group full"><label>Status</label><select id="fStatus" class="admin-input"><option value="available">Tersedia</option><option value="sold">Terjual</option></select></div>
+            <div class="form-group full"><label>Foto Mobil</label><input type="file" id="fPhoto" class="admin-input" accept="image/*" onchange="previewPhoto(event)"><div id="photoPreview" class="photo-preview"></div></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-save ripple-btn" onclick="saveCar()">💾 Simpan Mobil</button>
+            <button class="btn-cancel" onclick="cancelEdit()">Batal</button>
+          </div>
+          <div class="form-msg" id="formMsg"></div>
+        </div>
+      </div>
+
+      <!-- EDIT PORTOFOLIO -->
+      <div id="tab-portfolio" class="tab-content">
+        <div class="page-header-bar"><div><h1>Edit Portofolio</h1><p>Ubah teks dan konten website utama. Perubahan langsung tampil di website.</p></div><button class="btn-save" onclick="savePortfolio()" style="height:fit-content;">💾 Simpan Semua</button></div>
+        <div class="portfolio-grid">
+          <div class="portfolio-section-card">
+            <div class="portfolio-section-header"><div class="portfolio-section-title">🚀 Hero Section</div></div>
+            <div class="portfolio-section-body">
+              <div class="form-group"><label>Judul Hero</label><input type="text" id="p_hero_title" class="admin-input" placeholder="Temukan Mobil Impian Anda"></div>
+              <div class="form-group"><label>Deskripsi Hero</label><textarea id="p_hero_desc" class="admin-input" rows="3" placeholder="Deskripsi singkat..."></textarea></div>
+            </div>
+          </div>
+          <div class="portfolio-section-card">
+            <div class="portfolio-section-header"><div class="portfolio-section-title">🏢 Tentang Kami</div></div>
+            <div class="portfolio-section-body">
+              <div class="form-group"><label>Judul Tentang</label><input type="text" id="p_about_title" class="admin-input" placeholder="Showroom Mobil Terpercaya"></div>
+              <div class="form-group"><label>Deskripsi Tentang</label><textarea id="p_about_desc" class="admin-input" rows="3" placeholder="Cerita tentang perusahaan..."></textarea></div>
+            </div>
+          </div>
+          <div class="portfolio-section-card full">
+            <div class="portfolio-section-header"><div class="portfolio-section-title">📞 Informasi Kontak</div></div>
+            <div class="portfolio-section-body" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group"><label>Alamat</label><input type="text" id="p_contact_address" class="admin-input" placeholder="Jl. Raya Utama No. 88"></div>
+              <div class="form-group"><label>Nomor Telepon</label><input type="text" id="p_contact_phone" class="admin-input" placeholder="0812-3456-7890"></div>
+              <div class="form-group"><label>Email</label><input type="text" id="p_contact_email" class="admin-input" placeholder="info@example.com"></div>
+              <div class="form-group"><label>Jam Operasional</label><input type="text" id="p_contact_hours" class="admin-input" placeholder="Senin-Sabtu: 08.00-18.00"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAMPILAN & WARNA -->
+      <div id="tab-appearance" class="tab-content">
+        <div class="page-header-bar"><div><h1>Tampilan & Warna</h1><p>Ubah warna tema website. Perubahan langsung tampil di semua halaman.</p></div><button class="btn-save" onclick="saveAppearance()" style="height:fit-content;">💾 Simpan Warna</button></div>
+        <div class="panel-card" style="max-width:600px;">
+          <div class="panel-card-header"><div class="panel-card-title">🎨 Warna Tema</div></div>
+          <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem;">
+            <div class="color-row">
+              <input type="color" id="cp_primary" class="color-input-hidden" onchange="updateColorPreview('primary',this.value)">
+              <div class="color-preview" id="prev_primary" style="background:#1B4F9E;" onclick="document.getElementById('cp_primary').click()"></div>
+              <div class="color-label"><div style="font-weight:700;font-size:14px;color:rgba(255,255,255,0.8);">Warna Utama (Biru)</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">Navbar, tombol, teks aksen</div></div>
+              <code id="hex_primary" style="font-size:12px;color:rgba(255,255,255,0.4);">#1B4F9E</code>
+            </div>
+            <div class="color-row">
+              <input type="color" id="cp_accent" class="color-input-hidden" onchange="updateColorPreview('accent',this.value)">
+              <div class="color-preview" id="prev_accent" style="background:#F5C518;" onclick="document.getElementById('cp_accent').click()"></div>
+              <div class="color-label"><div style="font-weight:700;font-size:14px;color:rgba(255,255,255,0.8);">Warna Aksen (Kuning)</div><div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">Highlight, badge, tombol CTA</div></div>
+              <code id="hex_accent" style="font-size:12px;color:rgba(255,255,255,0.4);">#F5C518</code>
+            </div>
+          </div>
+        </div>
+        <div class="panel-card" style="max-width:600px;margin-top:1rem;">
+          <div class="panel-card-header"><div class="panel-card-title">👁 Preview Warna</div></div>
+          <div style="padding:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+            <div id="previewBtn1" style="padding:0.6rem 1.5rem;border-radius:8px;font-weight:700;font-size:14px;background:#1B4F9E;color:#fff;">Tombol Utama</div>
+            <div id="previewBtn2" style="padding:0.6rem 1.5rem;border-radius:8px;font-weight:700;font-size:14px;background:#F5C518;color:#060f23;">Tombol Aksen</div>
+            <div id="previewBadge" style="padding:0.3rem 1rem;border-radius:20px;font-weight:700;font-size:12px;background:rgba(245,197,24,0.15);color:#F5C518;border:1px solid rgba(245,197,24,0.3);">Badge Status</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script>
+// ============ CREDENTIALS (simpan di Supabase nanti bisa pakai auth) ============
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
+
+// ============ INIT ============
+window.addEventListener('DOMContentLoaded', async () => {
+  // Simulate brief loading
+  await new Promise(r => setTimeout(r, 800));
+  document.getElementById('loadingOverlay').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+
+  // Particles
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div'); p.className = 'particle';
+    p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${Math.random()*15+8}s;animation-delay:${Math.random()*8}s;width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;`;
+    c.appendChild(p);
+  }
+
+  // Ripple
+  document.querySelectorAll('.ripple-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      const r = this.getBoundingClientRect(), rpl = document.createElement('span');
+      rpl.className = 'ripple'; rpl.style.left = (e.clientX-r.left)+'px'; rpl.style.top = (e.clientY-r.top)+'px';
+      this.appendChild(rpl); setTimeout(() => rpl.remove(), 600);
+    });
+  });
+});
+
+// ============ LOGIN ============
+function doLogin() {
+  const u = document.getElementById('loginUsername').value.trim();
+  const p = document.getElementById('loginPassword').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  btn.classList.add('loading'); err.classList.remove('show');
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      document.getElementById('loginScreen').style.opacity = '0';
+      document.getElementById('loginScreen').style.transition = 'opacity 0.3s';
+      setTimeout(() => {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        initAdminPanel();
+      }, 300);
+    } else {
+      err.classList.add('show');
+      ['loginUsername','loginPassword'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.add('error');
+        setTimeout(() => el.classList.remove('error'), 500);
+      });
+    }
+  }, 900);
+}
+
+function doLogout() {
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginScreen').style.opacity = '1';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').classList.remove('show');
+}
+
+// ============ INIT PANEL ============
+async function initAdminPanel() {
+  await updateDashboard();
+  await renderAdminCars();
+  await loadPortfolioForm();
+  await loadAppearanceForm();
+}
+
+// ============ TABS ============
+function showTab(tab, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = {dashboard:'Dashboard',cars:'Kelola Mobil',add:'Tambah Mobil',portfolio:'Edit Portofolio',appearance:'Tampilan & Warna'};
+  document.getElementById('topbarTitle').textContent = titles[tab] || '';
+  if (tab === 'dashboard') updateDashboard();
+  if (tab === 'cars') renderAdminCars();
+  if (tab === 'add') resetForm();
+  if (tab === 'portfolio') loadPortfolioForm();
+  if (tab === 'appearance') loadAppearanceForm();
+}
+
+// ============ TOAST ============
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = 'toast' + (type==='error'?' error':'');
+  t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ============ DASHBOARD ============
+async function updateDashboard() {
+  try {
+    const cars = await dbGetCars();
+    document.getElementById('statTotal').textContent = cars.length;
+    document.getElementById('statAvail').textContent = cars.filter(c => c.status==='available').length;
+    document.getElementById('statSold').textContent = cars.filter(c => c.status==='sold').length;
+    const el = document.getElementById('recentCars');
+    const recent = cars.slice(0,4);
+    if (!recent.length) { el.innerHTML = '<div class="empty-state"><div style="font-size:2rem">🚗</div><h3>Belum ada mobil</h3></div>'; return; }
+    el.innerHTML = recent.map(c => `
+      <div class="recent-car-item">
+        <div class="recent-car-img">${c.photo?`<img src="${c.photo}">`:'🚗'}</div>
+        <div class="recent-car-info"><div class="recent-car-name">${c.name}</div><div class="recent-car-price">${formatPrice(c.price)}</div></div>
+        <span class="status-badge ${c.status==='available'?'badge-available':'badge-sold'}">${c.status==='available'?'Tersedia':'Terjual'}</span>
+      </div>`).join('');
+  } catch(e) { showToast('Gagal memuat dashboard', 'error'); }
+}
+
+// ============ CAR LIST ============
+async function renderAdminCars() {
+  const el = document.getElementById('adminCarsList');
+  el.innerHTML = '<div style="padding:2rem;text-align:center;color:rgba(255,255,255,0.3);">Memuat...</div>';
+  try {
+    const cars = await dbGetCars();
+    if (!cars.length) {
+      el.innerHTML = '<div class="empty-state"><div style="font-size:2.5rem">🚗</div><h3>Belum ada mobil</h3><p>Tambahkan unit pertama</p></div>';
+      return;
+    }
+    el.innerHTML = `<div class="admin-cars-list">${cars.map(c => `
+      <div class="admin-car-item">
+        <div class="admin-car-img">${c.photo?`<img src="${c.photo}">`:'<span style="font-size:2rem">🚗</span>'}</div>
+        <div class="admin-car-info">
+          <div class="admin-car-name">${c.name}</div>
+          <div class="admin-car-meta">${c.brand} · ${c.year}</div>
+          <div class="admin-car-price">${formatPrice(c.price)}</div>
+        </div>
+        <div class="admin-car-actions">
+          <span class="status-badge ${c.status==='available'?'badge-available':'badge-sold'}">${c.status==='available'?'Tersedia':'Terjual'}</span>
+          <button class="btn-toggle" onclick="toggleStatus(${c.id},'${c.status}')">${c.status==='available'?'Tandai Terjual':'Tandai Tersedia'}</button>
+          <button class="btn-edit" onclick="editCar(${c.id})">✏️ Edit</button>
+          <button class="btn-delete" onclick="deleteCar(${c.id})">🗑 Hapus</button>
+        </div>
+      </div>`).join('')}</div>`;
+  } catch(e) { el.innerHTML = '<div class="empty-state"><h3>Gagal memuat data</h3><p>Cek koneksi internet</p></div>'; }
+}
+
+async function toggleStatus(id, current) {
+  const newStatus = current === 'available' ? 'sold' : 'available';
+  try {
+    await dbUpdateCar(id, { status: newStatus });
+    showToast('Status berhasil diperbarui ✓');
+    renderAdminCars(); updateDashboard();
+  } catch(e) { showToast('Gagal update status', 'error'); }
+}
+
+async function deleteCar(id) {
+  if (!confirm('Hapus mobil ini dari showroom?')) return;
+  try {
+    await dbDeleteCar(id);
+    showToast('Mobil berhasil dihapus ✓');
+    renderAdminCars(); updateDashboard();
+  } catch(e) { showToast('Gagal menghapus', 'error'); }
+}
+
+function editCar(id) {
+  dbGetCars().then(cars => {
+    const car = cars.find(c => c.id === id); if (!car) return;
+    showTab('add', null);
+    document.getElementById('formTitle').textContent = 'Edit Mobil';
+    document.getElementById('editId').value = id;
+    document.getElementById('fName').value = car.name;
+    document.getElementById('fBrand').value = car.brand;
+    document.getElementById('fYear').value = car.year;
+    document.getElementById('fPrice').value = car.price;
+    document.getElementById('fDesc').value = car.description || '';
+    document.getElementById('fStatus').value = car.status;
+    if (car.photo) {
+      document.getElementById('photoPreview').innerHTML = `<img src="${car.photo}" style="max-width:300px;border-radius:10px;margin-top:8px;">`;
+      document.getElementById('photoPreview').dataset.photo = car.photo;
+    }
+  });
+}
+
+// ============ FORM ============
+function previewPhoto(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    const prev = document.getElementById('photoPreview');
+    prev.innerHTML = `<img src="${ev.target.result}" style="max-width:300px;border-radius:10px;margin-top:10px;">`;
+    prev.dataset.photo = ev.target.result;
+  }; r.readAsDataURL(file);
+}
+
+async function saveCar() {
+  const name = document.getElementById('fName').value.trim();
+  const brand = document.getElementById('fBrand').value.trim();
+  const year = document.getElementById('fYear').value;
+  const price = document.getElementById('fPrice').value;
+  const description = document.getElementById('fDesc').value.trim();
+  const status = document.getElementById('fStatus').value;
+  const editId = document.getElementById('editId').value;
+  const prev = document.getElementById('photoPreview');
+  const msg = document.getElementById('formMsg');
+
+  if (!name||!brand||!year||!price) { msg.textContent='⚠️ Harap lengkapi semua field wajib.'; msg.style.color='#ff6b6b'; return; }
+
+  let photo = prev.dataset.photo || '';
+  if (!photo && editId) { const cars = await dbGetCars(); const ex = cars.find(c=>c.id==editId); if(ex) photo=ex.photo||''; }
+
+  try {
+    const carData = { name, brand, year:+year, price:+price, description, status, photo };
+    if (editId) {
+      await dbUpdateCar(parseInt(editId), carData);
+      msg.textContent = '✅ Mobil berhasil diperbarui!'; msg.style.color = '#4cd97b';
+      showToast('Mobil berhasil diperbarui ✓');
+    } else {
+      await dbAddCar(carData);
+      msg.textContent = '✅ Mobil berhasil ditambahkan!'; msg.style.color = '#4cd97b';
+      showToast('Mobil berhasil ditambahkan ✓');
+      resetForm();
+    }
+    updateDashboard();
+  } catch(e) { msg.textContent = '❌ Gagal menyimpan. Coba lagi.'; msg.style.color = '#ff6b6b'; }
+}
+
+function resetForm() {
+  ['editId','fName','fBrand','fYear','fPrice','fDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fStatus').value = 'available';
+  document.getElementById('photoPreview').innerHTML = '';
+  document.getElementById('photoPreview').dataset.photo = '';
+  document.getElementById('formTitle').textContent = 'Tambah Mobil Baru';
+  document.getElementById('formMsg').textContent = '';
+}
+function cancelEdit() { resetForm(); showTab('cars', null); }
+
+// ============ PORTFOLIO ============
+async function loadPortfolioForm() {
+  try {
+    const data = await dbGetPortfolio();
+    const map = {hero_title:'p_hero_title',hero_desc:'p_hero_desc',about_title:'p_about_title',about_desc:'p_about_desc',contact_address:'p_contact_address',contact_phone:'p_contact_phone',contact_email:'p_contact_email',contact_hours:'p_contact_hours'};
+    Object.entries(map).forEach(([key,id]) => { const el=document.getElementById(id); if(el&&data[key]) el.value=data[key]; });
+  } catch(e) { console.log('Portfolio load error',e); }
+}
+
+async function savePortfolio() {
+  const map = {hero_title:'p_hero_title',hero_desc:'p_hero_desc',about_title:'p_about_title',about_desc:'p_about_desc',contact_address:'p_contact_address',contact_phone:'p_contact_phone',contact_email:'p_contact_email',contact_hours:'p_contact_hours'};
+  try {
+    for (const [key,id] of Object.entries(map)) {
+      const val = document.getElementById(id)?.value;
+      if (val !== undefined) await dbSetPortfolio(key, val);
+    }
+    showToast('✅ Portofolio berhasil disimpan! Refresh website untuk melihat perubahan.');
+  } catch(e) { showToast('Gagal menyimpan portofolio', 'error'); }
+}
+
+// ============ APPEARANCE ============
+async function loadAppearanceForm() {
+  try {
+    const settings = await dbGetSettings();
+    if (settings.color_primary) { document.getElementById('cp_primary').value = settings.color_primary; updateColorPreview('primary', settings.color_primary); }
+    if (settings.color_accent) { document.getElementById('cp_accent').value = settings.color_accent; updateColorPreview('accent', settings.color_accent); }
+  } catch(e) {}
+}
+
+function updateColorPreview(type, val) {
+  document.getElementById(`prev_${type}`).style.background = val;
+  document.getElementById(`hex_${type}`).textContent = val;
+  if (type === 'primary') { document.getElementById('previewBtn1').style.background = val; }
+  if (type === 'accent') { document.getElementById('previewBtn2').style.background = val; document.getElementById('previewBadge').style.color = val; document.getElementById('previewBadge').style.background = val+'26'; document.getElementById('previewBadge').style.borderColor = val+'4D'; }
+}
+
+async function saveAppearance() {
+  try {
+    await dbSetSetting('color_primary', document.getElementById('cp_primary').value);
+    await dbSetSetting('color_accent', document.getElementById('cp_accent').value);
+    showToast('✅ Warna berhasil disimpan! Refresh website untuk melihat perubahan.');
+  } catch(e) { showToast('Gagal menyimpan warna', 'error'); }
+}
+</script>
+</body>
+</html>
