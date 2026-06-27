@@ -271,7 +271,7 @@ img{max-width:100%;display:block;}
       </button>
       <div class="login-error-msg" id="loginError">Username atau password salah.</div>
       <div class="login-divider"><span>atau</span></div>
-      <a href="index.html" class="back-link">← Kembali ke Website Utama</a>
+      <a href="https://pratamamandiri.vercel.app" class="back-link">← Kembali ke Website Utama</a>
     </div>
   </div>
 </div>
@@ -298,8 +298,8 @@ img{max-width:100%;display:block;}
       <div class="sidebar-link" onclick="showTab('portfolio',this)"><span class="sidebar-link-icon">✏️</span> Edit Portofolio</div>
       <div class="sidebar-link" onclick="showTab('appearance',this)"><span class="sidebar-link-icon">🎨</span> Tampilan & Warna</div>
       <div class="sidebar-section-label" style="margin-top:1rem;">Navigasi</div>
-      <div class="sidebar-link" onclick="window.open('showroom.html','_blank')"><span class="sidebar-link-icon">🏪</span> Lihat Showroom</div>
-      <div class="sidebar-link" onclick="window.open('index.html','_blank')"><span class="sidebar-link-icon">🌐</span> Website Utama</div>
+      <div class="sidebar-link" onclick="window.open('https://pratamamandiri.vercel.app/showroom.html','_blank')"><span class="sidebar-link-icon">🏪</span> Lihat Showroom</div>
+      <div class="sidebar-link" onclick="window.open('https://pratamamandiri.vercel.app','_blank')"><span class="sidebar-link-icon">🌐</span> Website Utama</div>
     </div>
     <div class="sidebar-footer">
       <div class="sidebar-link" onclick="doLogout()" style="color:rgba(255,100,100,0.7);"><span class="sidebar-link-icon">🚪</span> Keluar</div>
@@ -309,8 +309,8 @@ img{max-width:100%;display:block;}
   <div class="topbar">
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
     <div class="topbar-right">
-      <button class="btn-topbar btn-view-showroom" onclick="window.open('showroom.html','_blank')">🏪 Showroom</button>
-      <button class="btn-topbar btn-view-site" onclick="window.open('index.html','_blank')">🌐 Website</button>
+      <button class="btn-topbar btn-view-showroom" onclick="window.open('https://pratamamandiri.vercel.app/showroom.html','_blank')">🏪 Showroom</button>
+      <button class="btn-topbar btn-view-site" onclick="window.open('https://pratamamandiri.vercel.app','_blank')">🌐 Website</button>
       <div class="topbar-user">
         <!-- LOGO BULAT di topbar -->
         <div class="logo-circle-xs">
@@ -439,11 +439,22 @@ img{max-width:100%;display:block;}
 
 <script src="config.js"></script>
 <script>
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin123';
+const ADMIN_USER = 'pratamamandiri';
+const ADMIN_PASS = 'pratamamandiri2012';
+const SESSION_KEY = 'pm_admin_session';
 
 window.addEventListener('DOMContentLoaded', async () => {
   await new Promise(r => setTimeout(r, 800));
+
+  // Cek apakah sudah pernah login di browser ini
+  const session = localStorage.getItem(SESSION_KEY);
+  if (session === 'active') {
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    initAdminPanel();
+    return;
+  }
+
   document.getElementById('loadingOverlay').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   const c = document.getElementById('particles');
@@ -470,6 +481,7 @@ function doLogin() {
   setTimeout(() => {
     btn.classList.remove('loading');
     if (u === ADMIN_USER && p === ADMIN_PASS) {
+      localStorage.setItem(SESSION_KEY, 'active');
       document.getElementById('loginScreen').style.opacity = '0';
       document.getElementById('loginScreen').style.transition = 'opacity 0.3s';
       setTimeout(() => {
@@ -489,6 +501,7 @@ function doLogin() {
 }
 
 function doLogout() {
+  localStorage.removeItem(SESSION_KEY);
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginScreen').style.opacity = '1';
