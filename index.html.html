@@ -252,10 +252,10 @@ img{max-width:100%;display:block;}
       <div class="login-card-title">Selamat Datang 👋</div>
       <div class="login-card-sub">Masuk ke panel admin Pratama Mandiri</div>
       <div class="form-field">
-        <label>Username</label>
+        <label>Email</label>
         <div class="input-wrap">
           <span class="input-icon">👤</span>
-          <input type="text" id="loginUsername" class="login-input" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()">
+          <input type="email" id="loginEmail" class="login-input" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')doLogin()">
         </div>
       </div>
       <div class="form-field">
@@ -269,7 +269,7 @@ img{max-width:100%;display:block;}
         <span class="btn-text">Masuk ke Dashboard</span>
         <div class="spinner"></div>
       </button>
-      <div class="login-error-msg" id="loginError">Username atau password salah.</div>
+      <div class="login-error-msg" id="loginError">Email atau password salah.</div>
       <div class="login-divider"><span>atau</span></div>
       <a href="https://pratamamandiri.vercel.app" class="back-link">← Kembali ke Website Utama</a>
     </div>
@@ -316,7 +316,7 @@ img{max-width:100%;display:block;}
         <div class="logo-circle-xs">
           <img src="logo.png" alt="PM">
         </div>
-        <span class="topbar-username">Admin</span>
+        <span class="topbar-username" id="topbarUsername">Admin</span>
       </div>
       <button class="btn-topbar btn-logout" onclick="doLogout()">Keluar</button>
     </div>
@@ -437,20 +437,19 @@ img{max-width:100%;display:block;}
   </main>
 </div>
 
+<!-- Library resmi Supabase, dibutuhkan untuk sistem login (Auth) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script>
-const ADMIN_USER = 'pratamamandiri';
-const ADMIN_PASS = 'pratamamandiri2012';
-const SESSION_KEY = 'pm_admin_session';
-
 window.addEventListener('DOMContentLoaded', async () => {
   await new Promise(r => setTimeout(r, 800));
 
-  // Cek apakah sudah pernah login di browser ini
-  const session = localStorage.getItem(SESSION_KEY);
-  if (session === 'active') {
+  // Cek apakah user masih punya sesi login aktif (Supabase yang urus penyimpanannya, bukan kita)
+  const session = await authGetSession();
+  if (session) {
     document.getElementById('loadingOverlay').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('topbarUsername').textContent = session.user.email;
     initAdminPanel();
     return;
   }
@@ -472,36 +471,38 @@ window.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
-function doLogin() {
-  const u = document.getElementById('loginUsername').value.trim();
-  const p = document.getElementById('loginPassword').value;
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
   const btn = document.getElementById('loginBtn');
   const err = document.getElementById('loginError');
   btn.classList.add('loading'); err.classList.remove('show');
-  setTimeout(() => {
+
+  try {
+    const data = await authLogin(email, password);
     btn.classList.remove('loading');
-    if (u === ADMIN_USER && p === ADMIN_PASS) {
-      localStorage.setItem(SESSION_KEY, 'active');
-      document.getElementById('loginScreen').style.opacity = '0';
-      document.getElementById('loginScreen').style.transition = 'opacity 0.3s';
-      setTimeout(() => {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        initAdminPanel();
-      }, 300);
-    } else {
-      err.classList.add('show');
-      ['loginUsername','loginPassword'].forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.add('error');
-        setTimeout(() => el.classList.remove('error'), 500);
-      });
-    }
-  }, 900);
+    document.getElementById('loginScreen').style.opacity = '0';
+    document.getElementById('loginScreen').style.transition = 'opacity 0.3s';
+    setTimeout(() => {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('topbarUsername').textContent = data.user.email;
+      initAdminPanel();
+    }, 300);
+  } catch (e) {
+    btn.classList.remove('loading');
+    err.textContent = 'Email atau password salah.';
+    err.classList.add('show');
+    ['loginEmail','loginPassword'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.add('error');
+      setTimeout(() => el.classList.remove('error'), 500);
+    });
+  }
 }
 
-function doLogout() {
-  localStorage.removeItem(SESSION_KEY);
+async function doLogout() {
+  await authLogout();
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginScreen').style.opacity = '1';
